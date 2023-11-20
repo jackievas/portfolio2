@@ -1,9 +1,9 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // Fetch JSON data
+    // Fetch JSON data (employees.json)
     fetch('employees.json')
         .then(response => response.json())
         .then(jsonData => {
-            // Fetch XML data
+            // Fetch XML data (employees.xml)
             fetch('employees.xml')
                 .then(response => response.text())
                 .then(xmlData => {
@@ -11,19 +11,25 @@ document.addEventListener('DOMContentLoaded', function () {
                     const parser = new DOMParser();
                     const xmlDoc = parser.parseFromString(xmlData, 'application/xml');
 
-                    // Combine JSON and XML data
-                    const employees = mergeData(jsonData, xmlDoc);
+                    // Fetch JSON data for positions
+                    fetch('positions.json')
+                        .then(response => response.json())
+                        .then(positionsData => {
+                            // Combine JSON and XML data
+                            const employees = mergeData(jsonData, xmlDoc, positionsData);
 
-                    // Display employees
-                    displayEmployees(employees);
+                            // Display employees
+                            displayEmployees(employees);
+                        })
+                        .catch(error => console.error('Error fetching positions JSON:', error));
                 })
                 .catch(error => console.error('Error fetching XML:', error));
         })
         .catch(error => console.error('Error fetching JSON:', error));
 });
 
-function mergeData(jsonData, xmlDoc) {
-    // Combine JSON and XML data based on a common identifier (e.g., employee ID)
+function mergeData(jsonData, xmlDoc, positionsData) {
+    // Combine JSON, XML, and positions data based on a common identifier (e.g., employee ID)
     const mergedData = [];
 
     jsonData.forEach(jsonEmployee => {
@@ -31,15 +37,22 @@ function mergeData(jsonData, xmlDoc) {
 
         const xmlEmployee = xmlDoc.querySelector(`employee[id="${employeeId}"]`);
         if (xmlEmployee) {
-            const mergedEmployee = {
-                id: employeeId,
-                name: jsonEmployee.name,
-                position: jsonEmployee.position,
-                department: xmlEmployee.getAttribute('department'),
-                // Add more fields as needed
-            };
+            const position = jsonEmployee.position;
+            const positionInfo = positionsData[position];
 
-            mergedData.push(mergedEmployee);
+            if (positionInfo) {
+                const mergedEmployee = {
+                    id: employeeId,
+                    name: jsonEmployee.name,
+                    position: position,
+                    department: xmlEmployee.getAttribute('department'),
+                    // Add more fields as needed
+                    positionDescription: positionInfo.description,
+                    positionSkills: positionInfo.skills
+                };
+
+                mergedData.push(mergedEmployee);
+            }
         }
     });
 
@@ -56,6 +69,8 @@ function displayEmployees(employees) {
             <h3>${employee.name}</h3>
             <p><strong>Position:</strong> ${employee.position}</p>
             <p><strong>Department:</strong> ${employee.department}</p>
+            <p><strong>Position Description:</strong> ${employee.positionDescription}</p>
+            <p><strong>Position Skills:</strong> ${employee.positionSkills.join(', ')}</p>
             <!-- Add more fields as needed -->
         `;
         employeeListContainer.appendChild(employeeCard);
