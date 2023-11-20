@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     } else {
         console.error('Please check your code and data files for any issues.');
     }
-});
+};
 
 function mergeData(jsonData, xmlDoc, positionsData) {
     const mergedData = [];
