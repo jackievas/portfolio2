@@ -28,6 +28,9 @@ document.addEventListener('DOMContentLoaded', async function () {
 
         // Display employees
         displayEmployees(employees);
+
+        // Display success message
+        console.log('Script ran successfully!');
     } catch (error) {
         console.error('An error occurred:', error);
 
@@ -84,4 +87,5 @@ function displayEmployees(employees) {
         employeeListContainer.appendChild(employeeCard);
     });
 }
+
 
