@@ -1,6 +1,4 @@
-document.addEventListener('DOMContentLoaded', loadDataAndDisplay);
-
-async function loadDataAndDisplay() {
+document.addEventListener('DOMContentLoaded', async () => {
     try {
         const jsonData = await fetchData('employees.json');
         const xmlData = await fetchData('employees.xml', 'text');
@@ -15,7 +13,7 @@ async function loadDataAndDisplay() {
     } catch (error) {
         handleFetchError(error);
     }
-}
+});
 
 async function fetchData(url, type = 'json') {
     const response = await fetch(url);
@@ -26,8 +24,7 @@ async function fetchData(url, type = 'json') {
 }
 
 function parseXml(xmlText) {
-    const parser = new DOMParser();
-    return parser.parseFromString(xmlText, 'application/xml');
+    return new DOMParser().parseFromString(xmlText, 'application/xml');
 }
 
 function mergeData(jsonData, xmlDoc, positionsData) {
@@ -43,7 +40,7 @@ function mergeData(jsonData, xmlDoc, positionsData) {
                 return {
                     id: employeeId,
                     name: jsonEmployee.name,
-                    position: position,
+                    position,
                     department: xmlEmployee.getAttribute('department'),
                     positionDescription: positionInfo.description,
                     positionSkills: positionInfo.skills
@@ -51,7 +48,7 @@ function mergeData(jsonData, xmlDoc, positionsData) {
             }
         }
         return null;
-    }).filter(Boolean); // Remove null values
+    }).filter(Boolean);
 }
 
 function displayEmployees(employees) {
@@ -80,5 +77,3 @@ function handleFetchError(error) {
         console.error('Please check your code and data files for any issues.');
     }
 }
-
-
