@@ -1,0 +1,15 @@
+{
+  "Software Engineer": {
+    "description": "Develops software applications and solutions.",
+    "skills": ["Programming", "Problem Solving", "Team Collaboration"]
+  },
+  "HR Specialist": {
+    "description": "Handles human resources tasks and employee relations.",
+    "skills": ["Communication", "Employee Relations", "HR Policies"]
+  },
+  "Marketing Manager": {
+    "description": "Oversees marketing activities and campaigns.",
+    "skills": ["Marketing Strategy", "Team Management", "Data Analysis"]
+  }
+  // Add more position entries as needed
+}
