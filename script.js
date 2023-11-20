@@ -3,8 +3,8 @@ document.addEventListener('DOMContentLoaded', loadDataAndDisplay);
 async function loadDataAndDisplay() {
     try {
         const jsonData = await fetchData('employees.json');
-        const xmlText = await fetchData('employees.xml', 'text');
-        const xmlDoc = parseXml(xmlText);
+        const xmlData = await fetchData('employees.xml', 'text');
+        const xmlDoc = parseXml(xmlData);
         const positionsData = await fetchData('positions.json');
 
         const employees = mergeData(jsonData, xmlDoc, positionsData);
@@ -37,7 +37,7 @@ function mergeData(jsonData, xmlDoc, positionsData) {
 
         if (xmlEmployee) {
             const position = jsonEmployee.position;
-            const positionInfo = positionsData[position];
+            const positionInfo = positionsData.positions[position];
 
             if (positionInfo) {
                 return {
@@ -80,4 +80,5 @@ function handleFetchError(error) {
         console.error('Please check your code and data files for any issues.');
     }
 }
+
 
