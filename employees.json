@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1,
+    "name": "John Doe",
+    "position": "Software Engineer"
+  },
+  {
+    "id": 2,
+    "name": "Jane Smith",
+    "position": "HR Specialist"
+  },
+  {
+    "id": 3,
+    "name": "Bob Johnson",
+    "position": "Marketing Manager"
+  }
+  // Add more employee entries as needed
+]
