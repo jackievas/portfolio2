@@ -1,51 +1,37 @@
-document.addEventListener('DOMContentLoaded', async function () {
+document.addEventListener('DOMContentLoaded', loadDataAndDisplay);
+
+async function loadDataAndDisplay() {
     try {
-        // Fetch JSON data (employees.json)
-        const responseJson = await fetch('employees.json');
-        if (!responseJson.ok) {
-            throw new Error(`Error fetching JSON: ${responseJson.status} ${responseJson.statusText}`);
-        }
-        const jsonData = await responseJson.json();
+        const jsonData = await fetchData('employees.json');
+        const xmlText = await fetchData('employees.xml', 'text');
+        const xmlDoc = parseXml(xmlText);
+        const positionsData = await fetchData('positions.json');
 
-        // Fetch XML data (employees.xml)
-        const responseXml = await fetch('employees.xml');
-        if (!responseXml.ok) {
-            throw new Error(`Error fetching XML: ${responseXml.status} ${responseXml.statusText}`);
-        }
-        const xmlText = await responseXml.text();
-        const parser = new DOMParser();
-        const xmlDoc = parser.parseFromString(xmlText, 'application/xml');
-
-        // Fetch JSON data for positions
-        const responsePositions = await fetch('positions.json');
-        if (!responsePositions.ok) {
-            throw new Error(`Error fetching positions JSON: ${responsePositions.status} ${responsePositions.statusText}`);
-        }
-        const positionsData = await responsePositions.json();
-
-        // Combine JSON, XML, and positions data
         const employees = mergeData(jsonData, xmlDoc, positionsData);
 
-        // Display employees
         displayEmployees(employees);
 
-        // Display success message
         console.log('Script ran successfully!');
     } catch (error) {
-        console.error('An error occurred:', error);
-
-        if (error instanceof SyntaxError) {
-            console.error('This is a syntax error. Double-check your JSON or XML files for any formatting issues.');
-        } else {
-            console.error('Please check your code and data files for any issues.');
-        }
+        handleFetchError(error);
     }
-});
+}
+
+async function fetchData(url, type = 'json') {
+    const response = await fetch(url);
+    if (!response.ok) {
+        throw new Error(`Error fetching ${type.toUpperCase()}: ${response.status} ${response.statusText}`);
+    }
+    return type === 'json' ? await response.json() : await response.text();
+}
+
+function parseXml(xmlText) {
+    const parser = new DOMParser();
+    return parser.parseFromString(xmlText, 'application/xml');
+}
 
 function mergeData(jsonData, xmlDoc, positionsData) {
-    const mergedData = [];
-
-    jsonData.forEach(jsonEmployee => {
+    return jsonData.map(jsonEmployee => {
         const employeeId = jsonEmployee.id;
         const xmlEmployee = xmlDoc.querySelector(`employee[id="${employeeId}"]`);
 
@@ -54,7 +40,7 @@ function mergeData(jsonData, xmlDoc, positionsData) {
             const positionInfo = positionsData[position];
 
             if (positionInfo) {
-                const mergedEmployee = {
+                return {
                     id: employeeId,
                     name: jsonEmployee.name,
                     position: position,
@@ -62,13 +48,10 @@ function mergeData(jsonData, xmlDoc, positionsData) {
                     positionDescription: positionInfo.description,
                     positionSkills: positionInfo.skills
                 };
-
-                mergedData.push(mergedEmployee);
             }
         }
-    });
-
-    return mergedData;
+        return null;
+    }).filter(Boolean); // Remove null values
 }
 
 function displayEmployees(employees) {
@@ -86,6 +69,16 @@ function displayEmployees(employees) {
         `;
         employeeListContainer.appendChild(employeeCard);
     });
+}
+
+function handleFetchError(error) {
+    console.error('An error occurred:', error);
+
+    if (error instanceof SyntaxError) {
+        console.error('This is a syntax error. Double-check your JSON or XML files for any formatting issues.');
+    } else {
+        console.error('Please check your code and data files for any issues.');
+    }
 }
 
 
