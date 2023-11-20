@@ -28,15 +28,16 @@ document.addEventListener('DOMContentLoaded', async function () {
 
         // Display employees
         displayEmployees(employees);
-   } catch (error) {
-    console.error('An error occurred:', error);
+    } catch (error) {
+        console.error('An error occurred:', error);
 
-    if (error instanceof SyntaxError) {
-        console.error('This is a syntax error. Double-check your JSON or XML files for any formatting issues.');
-    } else {
-        console.error('Please check your code and data files for any issues.');
+        if (error instanceof SyntaxError) {
+            console.error('This is a syntax error. Double-check your JSON or XML files for any formatting issues.');
+        } else {
+            console.error('Please check your code and data files for any issues.');
+        }
     }
-};
+});
 
 function mergeData(jsonData, xmlDoc, positionsData) {
     const mergedData = [];
@@ -83,3 +84,4 @@ function displayEmployees(employees) {
         employeeListContainer.appendChild(employeeCard);
     });
 }
+
