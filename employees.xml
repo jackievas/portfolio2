@@ -1,0 +1,18 @@
+<employees>
+  <employee id="1" department="Engineering">
+    <name>John Doe</name>
+    <position>Software Engineer</position>
+    <!-- Add more fields as needed -->
+  </employee>
+  <employee id="2" department="Human Resources">
+    <name>Jane Smith</name>
+    <position>HR Specialist</position>
+    <!-- Add more fields as needed -->
+  </employee>
+  <employee id="3" department="Marketing">
+    <name>Bob Johnson</name>
+    <position>Marketing Manager</position>
+    <!-- Add more fields as needed -->
+  </employee>
+  <!-- Add more employee entries as needed -->
+</employees>
